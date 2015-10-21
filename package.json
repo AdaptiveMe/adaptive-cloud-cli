@@ -1,0 +1,60 @@
+{
+  "name": "adaptive-cloud-cli",
+  "version": "0.0.1",
+  "description": "Adaptive Cloud Command Line Interface",
+  "preferGlobal": true,
+  "bin": {
+    "adaptive": "src/adaptive.js"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdaptiveMe/adaptive-cloud-cli.git"
+  },
+  "homepage": "http://adaptive.me",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Carlos Lozano",
+    "email": "carlos@adaptive.me",
+    "url": "https://github.com/carloslozano"
+  },
+  "contributors": [
+    {
+      "name": "Rafael Roman",
+      "email": "panthro.rafael@gmail.com",
+      "url": "https://github.com/Panthro"
+    },
+    {
+      "name": "Ferran Vilà",
+      "email": "ikocel1@gmail.com",
+      "url": "https://github.com/ferranvila"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/AdaptiveMe/adaptive-cloud-cli/issues"
+  },
+  "keywords": [
+    "adaptive",
+    "hybrid",
+    "html5",
+    "mobile",
+    "desktop",
+    "framework"
+  ],
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.9.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-eslint": "^17.3.1",
+    "grunt-jscs": "^2.1.0",
+    "grunt-mocha-test": "^0.12.7",
+    "load-grunt-tasks": "^3.3.0",
+    "mocha": "^2.3.3",
+    "time-grunt": "^1.2.2"
+  }
+}
