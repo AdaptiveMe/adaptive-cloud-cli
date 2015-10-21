@@ -3,28 +3,37 @@
 var queryString = require('querystring');
 var https = require('https');
 var colors = require('colors');
+var extend = require('util')._extend;
 
-var host = 'httpbin.org';
+var host = 'app.adaptive.me';
+
+exports.clientId = 'AdaptiveCli';
+exports.clientSecret = 'muAwkBAcFdpL68kELcNMrFELqAkNFrZkbKQKFMnG';
 
 /**
  * Method for calling a REST API with Node.js
  * @param endpoint URL of the REST service
  * @param method HTTP method for the call
  * @param data Data to send in the request
+ * @param head Additiona headers
  * @param success Callback for executing after the success
  */
-function performRequest(endpoint, method, data, success) {
+function performRequest(endpoint, method, data, head, success) {
 
   var dataString = JSON.stringify(data);
-  var headers = {};
+  var headers = extend({}, head);
 
   if (method == 'GET') {
     endpoint += '?' + queryString.stringify(data);
   } else {
-    headers = {
-      'Content-Type': 'application/json',
-      'Content-Length': dataString.length
-    };
+
+    if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+      dataString = queryString.stringify(data);
+    } else {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    headers['Content-Length'] = dataString.length;
   }
   var options = {
     host: host,
@@ -37,8 +46,6 @@ function performRequest(endpoint, method, data, success) {
 
     res.setEncoding('utf-8');
 
-    //console.log("statusCode: ", res.statusCode);
-    //console.log("headers: ", res.headers);
 
     var responseString = '';
 
@@ -48,7 +55,7 @@ function performRequest(endpoint, method, data, success) {
 
     res.on('end', function () {
       var responseObject = JSON.parse(responseString);
-      success(responseObject);
+      success(responseObject, res.statusCode, res.statusMessage);
     });
   });
 
