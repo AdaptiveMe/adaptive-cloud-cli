@@ -2,7 +2,6 @@
 
 var program = require('commander');
 var inquirer = require('inquirer');
-var path = require('path');
 var colors = require('colors');
 var lib = require('./lib.js');
 
@@ -22,31 +21,22 @@ if (!lib.validateEmail(email)) {
   //process.exit(1);
 }
 
-// Localstorage
-if (typeof localStorage === "undefined" || localStorage === null) {
-  var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-  var localDir = path.join(homeDir, '.adaptive');
-  var LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage(localDir);
-}
-
 // Prompt password to the user
 
-inquirer.prompt([
-  {
-    type: 'password',
-    message: 'Enter your password:',
-    name: 'password',
-    validate: function (input) {
-      if (!input) {
-        return 'The password cannot be empty';
-      }
-      if (/^([a-zA-Z0-9_]*)$/.test(input)) {
-        return true;
-      }
-      return 'The password cannot contain special characters or a blank space';
+inquirer.prompt([{
+  type: 'password',
+  message: 'Enter your password:',
+  name: 'password',
+  validate: function (input) {
+    if (!input) {
+      return 'The password cannot be empty';
     }
-  }], function (answers) {
+    if (/^([a-zA-Z0-9_]*)$/.test(input)) {
+      return true;
+    }
+    return 'The password cannot contain special characters or a blank space';
+  }
+}], function (answers) {
 
   // REST calling
   var auth = 'Basic ' + new Buffer(lib.clientId + ':' + lib.clientSecret).toString('base64');
@@ -60,21 +50,18 @@ inquirer.prompt([
     client_id: lib.clientId
   }, {
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Accept': 'application/json',
-    'Authorization': auth
+    Accept: 'application/json',
+    Authorization: auth
   }, function (data, statusCode, statusMessage) {
 
     if (statusCode != 200) {
       console.error(('ERROR (' + statusCode + ') ' + data.error_description).red);
     } else {
-      localStorage.setItem('access_token', data.access_token);
-      console.log(localStorage.getItem('access_token'));
+      lib.setToken(data.access_token);
+      console.log('You\'ve successfully logged!'.green);
     }
   });
 });
-
-
-/**/
 
 /**
  * Prints the sub-command usage

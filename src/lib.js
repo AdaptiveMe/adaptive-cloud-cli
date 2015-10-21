@@ -3,6 +3,7 @@
 var queryString = require('querystring');
 var https = require('https');
 var colors = require('colors');
+var path = require('path');
 var extend = require('util')._extend;
 
 var host = 'app.adaptive.me';
@@ -54,7 +55,7 @@ function performRequest(endpoint, method, data, head, success) {
     });
 
     res.on('end', function () {
-      var responseObject = JSON.parse(responseString);
+      var responseObject = responseString == '' ? '' : JSON.parse(responseString);
       success(responseObject, res.statusCode, res.statusMessage);
     });
   });
@@ -78,3 +79,38 @@ function validateEmail(email) {
   return re.test(email);
 }
 exports.validateEmail = validateEmail;
+
+// Localstorage
+var localStorage;
+
+if (typeof localStorage === 'undefined' || localStorage === null) {
+  var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+  var localDir = path.join(homeDir, '.adaptive');
+  var LocalStorage = require('node-localstorage').LocalStorage;
+  localStorage = new LocalStorage(localDir);
+}
+
+/**
+ * Method for retrieving the access token
+ */
+function getToken() {
+  return localStorage.getItem('access_token')
+}
+exports.getToken = getToken;
+
+/**
+ * Method for setting the access token
+ * @param token Token value to save
+ */
+function setToken(token) {
+  localStorage.setItem('access_token', token);
+}
+exports.setToken = setToken;
+
+/**
+ * Method for removing the token
+ */
+function removeToken() {
+  localStorage.removeItem('access_token');
+}
+exports.removeToken = removeToken;
