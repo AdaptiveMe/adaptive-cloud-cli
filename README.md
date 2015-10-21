@@ -1,16 +1,18 @@
 # Adaptive Cloud Command Line Interface
 
-Command Line Interface for communicating with the Adaptive Services on the cloud.
+> Command Line Interface for communicating with the Adaptive Services on the cloud.
 
 ## Installation
 
-´´´ bash
-npm install adaptive-cloud-cli -g
-´´´
+Install this globally and you'll have access to the **adaptive** command anywhere on your system.
+
+``` bash
+npm install -g adaptive-cloud-cli
+```
 
 ## Commands
 
-´´´ bash
+``` bash
   Usage: adaptive [options] [command]
 
 
@@ -25,4 +27,4 @@ npm install adaptive-cloud-cli -g
     -h, --help     output usage information
     -V, --version  output the version number
 
-´´´
+```
