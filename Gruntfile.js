@@ -1,18 +1,19 @@
 'use strict';
 
 module.exports = function (grunt) {
+
   require('time-grunt')(grunt);
 
   grunt.initConfig({
     eslint: {
       all: {
-        src: ['*.js', 'src']
+        src: ['*.js', 'src', 'test']
       }
     },
 
     jscs: {
       all: {
-        src: ['Gruntfile.js', 'src/**/*.js'],
+        src: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
         options: {config: '.jscsrc'}
       }
     },
@@ -26,7 +27,6 @@ module.exports = function (grunt) {
 
   });
 
-  // Load all grunt tasks matching the `grunt-*` pattern.
   require('load-grunt-tasks')(grunt);
 
   grunt.registerTask('lint', ['eslint', 'jscs']);
