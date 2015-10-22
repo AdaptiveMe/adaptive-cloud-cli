@@ -15,6 +15,7 @@ exports.clientSecret = 'muAwkBAcFdpL68kELcNMrFELqAkNFrZkbKQKFMnG';
 exports.urlLogin = '/oauth/token';
 exports.urlLogout = '/api/logout';
 exports.urlRegister = '/api/register';
+exports.urlAccount = '/api/account';
 
 /**
  * Method for calling a REST API with Node.js

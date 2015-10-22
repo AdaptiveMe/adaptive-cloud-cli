@@ -42,4 +42,13 @@ describe('API definition', function () {
     });
   });
 
+  it('Adaptive Cloud API Account URL', function (done) {
+
+    request.head(lib.host + lib.urlAccount, function (err, res, body) {
+      // Expects 401 because you are unauthorized
+      expect(res.statusCode).to.equal(401);
+      done();
+    });
+  });
+
 });

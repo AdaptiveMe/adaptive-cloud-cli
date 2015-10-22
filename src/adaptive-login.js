@@ -15,11 +15,6 @@ if (!program.args.length) {
 }
 
 var email = program.args[0];
-if (!lib.validateEmail(email)) {
-  // TODO: enable email validation
-  //console.error('The email format is not correct'.red);
-  //process.exit(1);
-}
 
 // Prompt password to the user
 
@@ -68,7 +63,7 @@ inquirer.prompt([{
  * Prints the sub-command usage
  */
 function printUsage() {
-  console.error('\n  Usage: adaptive login <email>\n'.red);
+  console.error('\n  Usage: adaptive login <username>\n'.red);
 }
 
 

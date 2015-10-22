@@ -9,9 +9,14 @@ program.parse(process.argv);
 lib.performRequest(lib.urlLogout, 'POST', {}, {}, function (data, statusCode, statusMessage) {
 
   if (statusCode != 200) {
-    console.error(('ERROR (' + statusCode + ') ' + data.error_description).red);
+    data = JSON.parse(data);
+    console.error(('ERROR (' + statusCode + ') ' + (data.error_description || data.error)).red);
   } else {
-    lib.removeToken();
-    console.log('Bye!'.green);
+    if (lib.getToken()) {
+      lib.removeToken();
+      console.log('Bye!'.green);
+    } else {
+      console.error(('ERROR: you\'re not logged!').red);
+    }
   }
 });
