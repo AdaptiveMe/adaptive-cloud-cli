@@ -1,7 +1,15 @@
 sudo: false
 language: node_js
 node_js:
-  - "4.1"
+- "4.1"
 
 script:
 - npm test
+
+deploy:
+  provider: npm
+  email: "carlos@adaptive.me"
+  api_key:
+    secure: OXI+/gq/GV/wt1LfGQF3hFNHRNROUiohoKNO0DyvTLnBe8X+Dbs0lixwNp8wQj5U3aq73I/o+qcaGP6F6XNtQ+uanJhLH+ZSGeXAXKoI2vT+Om/Xoa75jWfH4xDEtEuM5vnzJI+00c7lefcU7ww1MviutEfY8e8TxsFbCCKFqjtqA1UDPVSvaGQg+P2cXroCLOFqD+iHcEjg8oMcp4BJKOajdYRN+KUc/gIJZFHinVFAyJQAhhxAer3RvhGPOOOVZYMt+ypCxiJKa08WbcpC4KbVXzLpCgEhAMBfNWjSo3f+YcW/wyS+PmNBBpKvTmSNh4piEYW7lgpkifsT8aqgWSkf8jEaWVJIj2qoo1SXv7+n9X3Z/ruyHXpePjjr8o8W991NlGxW4BqP85xhXvKkaFyvY+dNRW0263vfW4sZzyt9Xyy9wQ/6Wi4ygZu6/Uy37p6oSoilSfXiHQ/MJzgh9kFE7kd1H1FpHbzRB7iXCf0lyaSSAbinNCsmalP2Lk8A+jWjk/lv3IeLeeiQb9HpV+KQKvwFsrOqjaw5XaULN/ApoD4FYlCVwADaOswUwvfa6rAYLJi4ElSpPABFIyVFrCXks8wyGZvjOcXkU8RATc/UXdUqEhOUalXO05zPy4hs6P/yi6/1Z8NP3qUT5otAl43NSGBidxYfa6gLN6JaAIc=
+  on:
+    tags: true
