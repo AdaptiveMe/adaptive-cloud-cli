@@ -1,7 +1,6 @@
 # Adaptive Cloud Command Line Interface
 
 [![Build Status](https://travis-ci.org/AdaptiveMe/adaptive-cloud-cli.svg?branch=master)](https://travis-ci.org/AdaptiveMe/adaptive-cloud-cli)
-[![GitHub tag](https://img.shields.io/github/tag/AdaptiveMe/adaptive-cloud-cli.svg)](https://github.com/AdaptiveMe/adaptive-cloud-cli) 
 [![Adaptive Cloud CLI](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/adaptive-cloud-cli) 
 [![Adaptive Cloud CLI](https://img.shields.io/node/v/gh-badges.svg)](https://www.npmjs.com/package/adaptive-cloud-cli) 
 [![Dependency Status](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli.svg)](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli) 

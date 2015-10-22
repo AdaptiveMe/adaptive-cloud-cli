@@ -6,7 +6,8 @@ var colors = require('colors');
 var path = require('path');
 var extend = require('util')._extend;
 
-exports.host = 'https://app.adaptive.me';
+var host = 'app.adaptive.me';
+exports.host = 'https://' + host;
 
 exports.clientId = 'AdaptiveCli';
 exports.clientSecret = 'muAwkBAcFdpL68kELcNMrFELqAkNFrZkbKQKFMnG';

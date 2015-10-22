@@ -53,8 +53,9 @@ inquirer.prompt([{
     Authorization: auth
   }, function (data, statusCode, statusMessage) {
 
+    data = JSON.parse(data);
+
     if (statusCode != 200) {
-      data = JSON.parse(data);
       console.error(('ERROR (' + statusCode + ') ' + (data.error_description || data.error)).red);
     } else {
       lib.setToken(data.access_token);
