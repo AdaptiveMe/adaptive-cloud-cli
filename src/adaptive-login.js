@@ -30,18 +30,17 @@ inquirer.prompt([{
   validate: function (input) {
     if (!input) {
       return 'The password cannot be empty';
+    } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
+      return 'The password cannot contain special characters or a blank space';
     }
-    if (/^([a-zA-Z0-9_]*)$/.test(input)) {
-      return true;
-    }
-    return 'The password cannot contain special characters or a blank space';
+    return true;
   }
 }], function (answers) {
 
   // REST calling
   var auth = 'Basic ' + new Buffer(lib.clientId + ':' + lib.clientSecret).toString('base64');
 
-  lib.performRequest('/oauth/token', 'POST', {
+  lib.performRequest(lib.urlLogin, 'POST', {
     username: email,
     password: answers.password,
     grant_type: 'password',
@@ -55,7 +54,8 @@ inquirer.prompt([{
   }, function (data, statusCode, statusMessage) {
 
     if (statusCode != 200) {
-      console.error(('ERROR (' + statusCode + ') ' + data.error_description).red);
+      data = JSON.parse(data);
+      console.error(('ERROR (' + statusCode + ') ' + (data.error_description || data.error)).red);
     } else {
       lib.setToken(data.access_token);
       console.log('You\'ve successfully logged!'.green);

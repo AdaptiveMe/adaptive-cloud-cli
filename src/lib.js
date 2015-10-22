@@ -6,10 +6,14 @@ var colors = require('colors');
 var path = require('path');
 var extend = require('util')._extend;
 
-var host = 'app.adaptive.me';
+exports.host = 'https://app.adaptive.me';
 
 exports.clientId = 'AdaptiveCli';
 exports.clientSecret = 'muAwkBAcFdpL68kELcNMrFELqAkNFrZkbKQKFMnG';
+
+exports.urlLogin = '/oauth/token';
+exports.urlLogout = '/api/logout';
+exports.urlRegister = '/api/register';
 
 /**
  * Method for calling a REST API with Node.js
@@ -30,8 +34,6 @@ function performRequest(endpoint, method, data, head, success) {
 
     if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
       dataString = queryString.stringify(data);
-    } else {
-      headers['Content-Type'] = 'application/json';
     }
 
     headers['Content-Length'] = dataString.length;
@@ -47,7 +49,6 @@ function performRequest(endpoint, method, data, head, success) {
 
     res.setEncoding('utf-8');
 
-
     var responseString = '';
 
     res.on('data', function (data) {
@@ -55,8 +56,7 @@ function performRequest(endpoint, method, data, head, success) {
     });
 
     res.on('end', function () {
-      var responseObject = responseString == '' ? '' : JSON.parse(responseString);
-      success(responseObject, res.statusCode, res.statusMessage);
+      success(responseString, res.statusCode, res.statusMessage);
     });
   });
 

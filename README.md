@@ -13,18 +13,17 @@ npm install -g adaptive-cloud-cli
 ## Commands
 
 ``` bash
-  Usage: adaptive [options] [command]
+Usage: adaptive [options] [command]
 
+Commands:
 
-  Commands:
+  login [email]     Login into the Adaptive Cloud Platform with your email
+  register [email]  Register user into the Adaptive Cloud Platform
+  logout            Logout from the Adaptive Cloud Platform
+  help [cmd]        display help for [cmd]
 
-    login [email]  Login into the Adaptive Cloud Platform with your email
-    logout         Logout from the Adaptive Cloud Platform
-    help [cmd]     display help for [cmd]
+Options:
 
-  Options:
-
-    -h, --help     output usage information
-    -V, --version  output the version number
-
+  -h, --help     output usage information
+  -V, --version  output the version number
 ```

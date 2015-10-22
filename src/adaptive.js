@@ -8,6 +8,7 @@ var packageJson = require('../package.json');
 program
   .version(packageJson.version)
   .command('login [email]', 'Login into the Adaptive Cloud Platform with your email')
+  .command('register [email]', 'Register user into the Adaptive Cloud Platform')
   .command('logout', 'Logout from the Adaptive Cloud Platform')
   .parse(process.argv);
 
