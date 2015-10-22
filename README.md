@@ -10,8 +10,6 @@
 
 [![Adaptive Runtime Platform](https://raw.githubusercontent.com/AdaptiveMe/AdaptiveMe.github.io/master/assets_v2/wordmark-adaptive-spectrum-1173x256.png)](#)
 
-## Introduction
-
 Command Line Interface for communicating with the Adaptive Services on the cloud.
 
 ## Installation
