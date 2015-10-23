@@ -10,7 +10,7 @@ var lib = require('./lib.js');
 program.parse(process.argv);
 
 if (!program.args.length) {
-  printUsage();
+  console.error('\n  Usage: adaptive login <username>\n'.red);
   process.exit(1);
 }
 
@@ -27,8 +27,9 @@ inquirer.prompt([{
       return 'The password cannot be empty';
     } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
       return 'The password cannot contain special characters or a blank space';
+    } else {
+      return true;
     }
-    return true;
   }
 }], function (answers) {
 
@@ -51,19 +52,16 @@ inquirer.prompt([{
     data = JSON.parse(data);
 
     if (statusCode != 200) {
-      console.error(('ERROR (' + statusCode + ') ' + (data.error_description || data.error)).red);
+
+      console.error(('ERROR (' + statusCode + ') ' + (statusMessage || data.error_description || data.error)).red);
+      process.exit(1);
+
     } else {
+
       lib.setToken(data.access_token);
       console.log('You\'ve successfully logged!'.green);
+      process.exit(0);
     }
   });
 });
-
-/**
- * Prints the sub-command usage
- */
-function printUsage() {
-  console.error('\n  Usage: adaptive login <username>\n'.red);
-}
-
 

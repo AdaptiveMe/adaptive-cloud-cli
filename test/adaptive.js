@@ -51,4 +51,18 @@ describe('API definition', function () {
     });
   });
 
+  it('Adaptive Cloud API Reset Password URL', function (done) {
+
+    request.post(lib.host + lib.urlResetPasswordInit, function (err, res, body) {
+      // Expects 406 because the request is not acceptable
+      expect(res.statusCode).to.equal(406);
+      done();
+    });
+    request.post(lib.host + lib.urlResetPasswordFinish, function (err, res, body) {
+      // Expects 406 because the request is not acceptable
+      expect(res.statusCode).to.equal(406);
+      done();
+    });
+  });
+
 });

@@ -16,6 +16,8 @@ exports.urlLogin = '/oauth/token';
 exports.urlLogout = '/api/logout';
 exports.urlRegister = '/api/register';
 exports.urlAccount = '/api/account';
+exports.urlResetPasswordInit = '/api/account/reset_password/init';
+exports.urlResetPasswordFinish = '/api/account/reset_password/finish';
 
 /**
  * Method for calling a REST API with Node.js
@@ -27,19 +29,26 @@ exports.urlAccount = '/api/account';
  */
 function performRequest(endpoint, method, data, head, success) {
 
-  var dataString = JSON.stringify(data);
+  var dataString;
   var headers = extend({}, head);
 
   if (method == 'GET') {
+
     endpoint += '?' + queryString.stringify(data);
+
   } else {
 
     if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
       dataString = queryString.stringify(data);
+    } else if (headers['Content-Type'] === 'text/plain') {
+      dataString = data['data'];
+    } else {
+      dataString = JSON.stringify(data)
     }
 
     headers['Content-Length'] = dataString.length;
   }
+
   var options = {
     host: host,
     path: endpoint,

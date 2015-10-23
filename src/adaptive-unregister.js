@@ -29,16 +29,19 @@ inquirer.prompt([{
           data = JSON.parse(data);
           var msg = (data.error_description || data.error || data.description);
           console.error(('ERROR (' + statusCode + ') ' + msg).red);
+          process.exit(1);
         } else {
           if (lib.getToken()) {
             lib.removeToken();
           }
           console.log('Successfully unregistered!'.green);
+          process.exit(0);
         }
       });
 
     } else {
       console.error(('ERROR: you\'re not logged!').red);
+      process.exit(1);
     }
 
   }

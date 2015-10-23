@@ -10,7 +10,7 @@ var lib = require('./lib.js');
 program.parse(process.argv);
 
 if (!program.args.length) {
-  printUsage();
+  console.error('\n  Usage: adaptive register <email>\n'.red);
   process.exit(1);
 }
 
@@ -31,8 +31,9 @@ inquirer.prompt([{
       return 'The username cannot be empty';
     } else if (!(/^([a-z0-9]*)$/.test(input))) {
       return 'The username cannot contain special characters or a blank space';
+    } else {
+      return true;
     }
-    return true;
   }
 
 }, {
@@ -46,8 +47,9 @@ inquirer.prompt([{
       return 'The password length should be at least 5 characters';
     } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
       return 'The password cannot contain special characters or a blank space';
+    } else {
+      return true;
     }
-    return true;
   }
 }], function (answers) {
 
@@ -62,16 +64,15 @@ inquirer.prompt([{
   }, function (data, statusCode, statusMessage) {
 
     if (statusCode == 400) {
+      data = JSON.parse(data);
       console.error(('ERROR (' + statusCode + ') ' + (data)).red);
+      process.exit(1);
     } else if (statusCode == 201) {
       console.log('You\'ve successfully registered!'.green);
+      process.exit(0);
+    } else {
+      console.error(('ERROR (' + statusCode + ') ' + statusMessage).red);
+      process.exit(1);
     }
   });
 });
-
-/**
- * Prints the sub-command usage
- */
-function printUsage() {
-  console.error('\n  Usage: adaptive register <email>\n'.red);
-}
