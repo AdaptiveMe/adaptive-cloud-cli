@@ -24,15 +24,19 @@ Usage: adaptive [options] [command]
 
 Commands:
 
-  login [email]     Login into the Adaptive Cloud Platform with your email
-  register [email]  Register user into the Adaptive Cloud Platform
-  logout            Logout from the Adaptive Cloud Platform
-  help [cmd]        display help for [cmd]
+  login [username]        Login into the Adaptive Cloud Platform with your username
+  register [email]        Register user into the Adaptive Cloud Platform
+  reset-password [email]  Reset the password for the user
+  change-password         Change the password for the current user
+  unregister              Remove all the account information for the user
+  logout                  Logout from the Adaptive Cloud Platform
+  help [cmd]              display help for [cmd]
 
 Options:
 
   -h, --help     output usage information
   -V, --version  output the version number
+
 ```
 
 ### About Adaptive Runtime Platform
