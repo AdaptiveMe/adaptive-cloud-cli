@@ -31,7 +31,7 @@ lib.performRequest(lib.urlResetPasswordInit, 'POST', {
     console.error(('ERROR (' + statusCode + ') The email address <' + email + '> is not registered on the system').red);
     process.exit(1);
   } else if (statusCode == 200) {
-    console.log('You\'ve received a mail with the reset key. ' +
+    console.log('You\'ve received a mail with the reset key. '.green +
       'Check the email and execute the change-password command'.green);
     process.exit(0);
   } else {

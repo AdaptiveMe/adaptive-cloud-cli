@@ -3,10 +3,11 @@
 var lib = require('../src/lib.js');
 var expect = require('expect.js');
 var request = require('request');
+var colors = require('colors');
 
 describe('API definition', function () {
 
-  this.timeout(5000); // Increase the default timeout
+  this.timeout(15000); // Increase the default timeout
 
   it('Adaptive Cloud API Host', function (done) {
 
@@ -16,52 +17,68 @@ describe('API definition', function () {
     });
   });
 
-  it('Adaptive Cloud API Login URL', function (done) {
+  it('Adaptive Cloud API Account Management', function (done) {
 
-    request.post(lib.host + lib.urlLogin, function (err, res, body) {
-      // Expects 401 because you are unauthorized
-      expect(res.statusCode).to.equal(401);
-      done();
-    });
-  });
+    var username = 'user' + new Date().getTime();
+    var email = 'email' + new Date().getTime() + '@email.com';
+    var password = 'superPassword';
 
-  it('Adaptive Cloud API Logout URL', function (done) {
+    // REGISTER
+    lib.performRequest(lib.urlRegister, 'POST', {
+      login: username,
+      email: email,
+      password: password,
+      langKey: 'en'
+    }, {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Accept: 'application/json, text/plain, */*'
+    }, function (data, statusCode, statusMessage) {
 
-    request.get(lib.host + lib.urlLogout, function (err, res, body) {
-      expect(res.statusCode).to.equal(200);
-      done();
-    });
-  });
+      if (statusCode == 201) {
 
-  it('Adaptive Cloud API Register URL', function (done) {
+        // LOGIN
 
-    request.post(lib.host + lib.urlRegister, function (err, res, body) {
-      // Expects 406 because the request is not acceptable
-      expect(res.statusCode).to.equal(406);
-      done();
-    });
-  });
+        lib.performRequest(lib.urlLogin, 'POST', {
+          username: username,
+          password: password,
+          grant_type: 'password',
+          scope: 'read write',
+          client_secret: lib.clientSecret,
+          client_id: lib.clientId
+        }, {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept: 'application/json',
+          Authorization: 'Basic ' + new Buffer(lib.clientId + ':' + lib.clientSecret).toString('base64')
+        }, function (data, statusCode, statusMessage) {
 
-  it('Adaptive Cloud API Account URL', function (done) {
+          if (statusCode == 200) {
 
-    request.head(lib.host + lib.urlAccount, function (err, res, body) {
-      // Expects 401 because you are unauthorized
-      expect(res.statusCode).to.equal(401);
-      done();
-    });
-  });
+            lib.setToken(JSON.parse(data).access_token);
 
-  it('Adaptive Cloud API Reset Password URL', function (done) {
+            // UNREGISTER
 
-    request.post(lib.host + lib.urlResetPasswordInit, function (err, res, body) {
-      // Expects 406 because the request is not acceptable
-      expect(res.statusCode).to.equal(406);
-      done();
-    });
-    request.post(lib.host + lib.urlResetPasswordFinish, function (err, res, body) {
-      // Expects 406 because the request is not acceptable
-      expect(res.statusCode).to.equal(406);
-      done();
+            lib.performRequest(lib.urlAccount, 'DELETE', {}, {
+              Accept: 'application/json, text/plain, */*',
+              Authorization: 'Bearer ' + lib.getToken()
+            }, function (data, statusCode, statusMessage) {
+
+              if (statusCode == 200) {
+
+                if (lib.getToken()) {
+                  lib.removeToken();
+                }
+                done();
+              } else {
+                throw new Error('ERROR (' + statusCode + '): Removing user' + statusMessage);
+              }
+            });
+          } else {
+            throw new Error('ERROR (' + statusCode + '): Logging user' + statusMessage);
+          }
+        });
+      } else {
+        throw new Error('ERROR (' + statusCode + '): Registering user ' + statusMessage);
+      }
     });
   });
 

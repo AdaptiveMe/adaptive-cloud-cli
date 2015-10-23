@@ -52,10 +52,13 @@ inquirer.prompt([{
     data = JSON.parse(data);
 
     if (statusCode != 200) {
-
-      console.error(('ERROR (' + statusCode + ') ' + (statusMessage || data.error_description || data.error)).red);
-      process.exit(1);
-
+      if (statusCode == 400) {
+        console.error('ERROR: Check your username/password'.red);
+        process.exit(1);
+      } else {
+        console.error(('ERROR (' + statusCode + ') ' + (statusMessage || data.error_description || data.error)).red);
+        process.exit(1);
+      }
     } else {
 
       lib.setToken(data.access_token);
