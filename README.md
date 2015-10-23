@@ -1,11 +1,9 @@
 # Adaptive Cloud Command Line Interface
 
 [![Build Status](https://travis-ci.org/AdaptiveMe/adaptive-cloud-cli.svg?branch=master)](https://travis-ci.org/AdaptiveMe/adaptive-cloud-cli)
-[![Adaptive Cloud CLI](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/adaptive-cloud-cli) 
-[![Adaptive Cloud CLI](https://img.shields.io/node/v/gh-badges.svg)](https://www.npmjs.com/package/adaptive-cloud-cli) 
+[![Adaptive Cloud CLI](https://img.shields.io/npm/v/adaptive-cloud-cli.svg)](https://www.npmjs.com/package/adaptive-cloud-cli) 
 [![Dependency Status](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli.svg)](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli) 
 [![devDependency Status](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli/dev-status.svg)](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli#info=devDependencies)
-[![License](https://img.shields.io/badge/license-apache%202-blue.svg)](https://raw.githubusercontent.com/AdaptiveMe/adaptive-cloud-cli/master/LICENSE) 
 
 [![Adaptive Runtime Platform](https://raw.githubusercontent.com/AdaptiveMe/AdaptiveMe.github.io/master/assets_v2/wordmark-adaptive-spectrum-1173x256.png)](#)
 
