@@ -13,13 +13,15 @@ Command Line Interface for communicating with the Adaptive Services on the cloud
 
 Install this globally and you'll have access to the **adaptive** command anywhere on your system.
 
-``` bash
+``` 
 npm install -g adaptive-cloud-cli
 ```
 
+![Login](img/login.gif)
+
 ## Commands
 
-``` bash
+``` 
 Usage: adaptive [options] [command]
 
 Commands:
