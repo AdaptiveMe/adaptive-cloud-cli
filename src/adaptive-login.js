@@ -29,15 +29,7 @@ inquirer.prompt([{
   type: 'password',
   message: 'Enter your password:',
   name: 'password',
-  validate: function (input) {
-    if (!input) {
-      return 'ERROR: The password cannot be empty'.red;
-    } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
-      return 'ERROR: The password cannot contain special characters or a blank space'.red;
-    } else {
-      return true;
-    }
-  }
+  validate: lib.validatePassword
 }], function (answers) {
 
   // REST calling

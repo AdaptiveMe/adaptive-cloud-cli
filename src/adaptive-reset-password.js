@@ -24,11 +24,12 @@ lib.performRequest(lib.urlResetPasswordInit, 'POST', {
   data: email
 }, {
   'Content-Type': 'text/plain',
-  Accept: 'application/json, text/plain, */*'
+  Accept: 'application/json, text/plain, */*',
 }, function (data, statusCode, statusMessage) {
 
   if (statusCode == 400) {
-    console.error(('ERROR (' + statusCode + '): The email address <' + email + '> is not registered on the system').red);
+    console.error(('ERROR (' + statusCode + '): The email address <' + email + '> is not ' +
+    'registered on the system').red);
     process.exit(1);
   } else if (statusCode == 200) {
     console.log('You\'ve received a mail with the reset key. '.green +

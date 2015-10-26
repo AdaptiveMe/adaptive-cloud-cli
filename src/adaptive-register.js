@@ -26,31 +26,13 @@ inquirer.prompt([{
   type: 'input',
   message: 'Enter your username:',
   name: 'username',
-  validate: function (input) {
-    if (!input) {
-      return 'ERROR: The username cannot be empty'.red;
-    } else if (!(/^([a-z0-9]*)$/.test(input))) {
-      return 'ERROR: The username cannot contain special characters or a blank space'.red;
-    } else {
-      return true;
-    }
-  }
+  validate: lib.validateUser
 
 }, {
   type: 'password',
   message: 'Enter your password:',
   name: 'password',
-  validate: function (input) {
-    if (!input) {
-      return 'ERROR: The password cannot be empty'.red;
-    } else if (input.length < 5) {
-      return 'ERROR: The password length should be at least 5 characters'.red;
-    } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
-      return 'ERROR: The password cannot contain special characters or a blank space'.red;
-    } else {
-      return true;
-    }
-  }
+  validate: lib.validatePassword
 }], function (answers) {
 
   lib.performRequest(lib.urlRegister, 'POST', {
