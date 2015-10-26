@@ -16,7 +16,7 @@ if (!program.args.length) {
 
 var email = program.args[0];
 if (!lib.validateEmail(email)) {
-  console.error('The email format is not correct'.red);
+  console.error('ERROR: The email format is not correct'.red);
   process.exit(1);
 }
 
@@ -28,9 +28,9 @@ inquirer.prompt([{
   name: 'username',
   validate: function (input) {
     if (!input) {
-      return 'The username cannot be empty';
+      return 'ERROR: The username cannot be empty'.red;
     } else if (!(/^([a-z0-9]*)$/.test(input))) {
-      return 'The username cannot contain special characters or a blank space';
+      return 'ERROR: The username cannot contain special characters or a blank space'.red;
     } else {
       return true;
     }
@@ -42,11 +42,11 @@ inquirer.prompt([{
   name: 'password',
   validate: function (input) {
     if (!input) {
-      return 'The password cannot be empty';
+      return 'ERROR: The password cannot be empty'.red;
     } else if (input.length < 5) {
-      return 'The password length should be at least 5 characters';
+      return 'ERROR: The password length should be at least 5 characters'.red;
     } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
-      return 'The password cannot contain special characters or a blank space';
+      return 'ERROR: The password cannot contain special characters or a blank space'.red;
     } else {
       return true;
     }
@@ -65,13 +65,13 @@ inquirer.prompt([{
 
     if (statusCode == 400) {
       data = JSON.parse(data);
-      console.error(('ERROR (' + statusCode + ') ' + (data)).red);
+      console.error(('ERROR (' + statusCode + '): ' + (data)).red);
       process.exit(1);
     } else if (statusCode == 201) {
       console.log('You\'ve successfully registered!'.green);
       process.exit(0);
     } else {
-      console.error(('ERROR (' + statusCode + ') ' + statusMessage).red);
+      console.error(('ERROR (' + statusCode + '): ' + statusMessage).red);
       process.exit(1);
     }
   });

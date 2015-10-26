@@ -16,6 +16,13 @@ if (!program.args.length) {
 
 var email = program.args[0];
 
+// Check for alredy logged users
+
+if (lib.getToken()) {
+  console.error('WARN: You\'re already logged. Please logout'.yellow);
+  process.exit(1);
+}
+
 // Prompt password to the user
 
 inquirer.prompt([{
@@ -24,9 +31,9 @@ inquirer.prompt([{
   name: 'password',
   validate: function (input) {
     if (!input) {
-      return 'The password cannot be empty';
+      return 'ERROR: The password cannot be empty'.red;
     } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
-      return 'The password cannot contain special characters or a blank space';
+      return 'ERROR: The password cannot contain special characters or a blank space'.red;
     } else {
       return true;
     }
@@ -56,7 +63,7 @@ inquirer.prompt([{
         console.error('ERROR: Check your username/password'.red);
         process.exit(1);
       } else {
-        console.error(('ERROR (' + statusCode + ') ' + (statusMessage || data.error_description || data.error)).red);
+        console.error(('ERROR (' + statusCode + '): ' + (statusMessage || data.error_description || data.error)).red);
         process.exit(1);
       }
     } else {

@@ -28,7 +28,7 @@ inquirer.prompt([{
         if (statusCode != 200) {
           data = JSON.parse(data);
           var msg = (data.error_description || data.error || data.description);
-          console.error(('ERROR (' + statusCode + ') ' + msg).red);
+          console.error(('ERROR (' + statusCode + '): ' + msg).red);
           process.exit(1);
         } else {
           if (lib.getToken()) {

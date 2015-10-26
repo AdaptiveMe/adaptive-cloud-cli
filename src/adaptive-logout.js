@@ -11,7 +11,7 @@ lib.performRequest(lib.urlLogout, 'POST', {}, {}, function (data, statusCode, st
   if (statusCode != 200) {
 
     data = JSON.parse(data);
-    console.error(('ERROR (' + statusCode + ') ' + (statusMessage || data.error_description || data.error)).red);
+    console.error(('ERROR (' + statusCode + '): ' + (statusMessage || data.error_description || data.error)).red);
     process.exit(1);
 
   } else {

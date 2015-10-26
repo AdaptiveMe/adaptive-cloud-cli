@@ -15,9 +15,9 @@ inquirer.prompt([{
   name: 'key',
   validate: function (input) {
     if (!input) {
-      return 'The key cannot be empty';
+      return 'ERROR: The key cannot be empty'.red;
     } else if (!(/^([0-9]*)$/.test(input))) {
-      return 'The key can only contain numbers';
+      return 'ERROR: The key can only contain numbers'.red;
     } else {
       return true;
     }
@@ -29,11 +29,11 @@ inquirer.prompt([{
   name: 'password',
   validate: function (input) {
     if (!input) {
-      return 'The password cannot be empty';
+      return 'ERROR: The password cannot be empty'.red;
     } else if (input.length < 5) {
-      return 'The password length should be at least 5 characters';
+      return 'ERROR: The password length should be at least 5 characters'.red;
     } else if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
-      return 'The password cannot contain special characters or a blank space';
+      return 'ERROR: The password cannot contain special characters or a blank space'.red;
     } else {
       return true;
     }
@@ -52,7 +52,7 @@ inquirer.prompt([{
       console.log('You\'ve successfully changed your password!'.green);
       process.exit(0);
     } else {
-      console.error(('ERROR (' + statusCode + ') ' + statusMessage).red);
+      console.error(('ERROR (' + statusCode + '): ' + statusMessage).red);
       process.exit(1);
     }
   });
