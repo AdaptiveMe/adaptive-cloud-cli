@@ -1,9 +1,11 @@
 # Adaptive Cloud Command Line Interface
 
-[![Build Status](https://travis-ci.org/AdaptiveMe/adaptive-cloud-cli.svg?branch=master)](https://travis-ci.org/AdaptiveMe/adaptive-cloud-cli)
-[![Adaptive Cloud CLI npm](https://img.shields.io/npm/v/adaptive-cloud-cli.svg)](https://www.npmjs.com/package/adaptive-cloud-cli) 
-[![Dependency Status](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli.svg)](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli) 
-[![devDependency Status](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli/dev-status.svg)](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli#info=devDependencies)
+[![Build Status](http://i.4dp.me/travis/AdaptiveMe/adaptive-cloud-cli.svg?branch=master)](https://travis-ci.org/AdaptiveMe/adaptive-cloud-cli)
+[![Adaptive Cloud CLI Tag](http://i.4dp.me/github/tag/AdaptiveMe/adaptive-cloud-cli.svg)](https://github.com/AdaptiveMe/adaptive-cloud-cli/tags) 
+[![Adaptive Cloud CLI Release](http://i.4dp.me/github/release/AdaptiveMe/adaptive-cloud-cli.svg)](https://github.com/AdaptiveMe/adaptive-cloud-cli/releases) 
+[![Adaptive Cloud CLI npm](http://i.4dp.me/npm/v/adaptive-cloud-cli.svg)](https://www.npmjs.com/package/adaptive-cloud-cli) 
+[![Dependency Status](http://i.4dp.me/david/AdaptiveMe/adaptive-cloud-cli.svg)](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli) 
+[![devDependency Status](http://i.4dp.me/david/dev/AdaptiveMe/adaptive-cloud-cli.svg)](https://david-dm.org/AdaptiveMe/adaptive-cloud-cli#info=devDependencies)
 
 [![Adaptive Runtime Platform](https://raw.githubusercontent.com/AdaptiveMe/AdaptiveMe.github.io/master/assets_v2/wordmark-adaptive-spectrum-1173x256.png)](#)
 
