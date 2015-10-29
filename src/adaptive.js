@@ -20,6 +20,7 @@ program
   .command('reset-password [email]', 'Reset the password for the user')
   .command('change-password', 'Change the password for the current user')
   .command('unregister', 'Remove all the account information for the user')
+  .command('build', 'Build a project on the Adaptive Cloud Builder')
   .command('logout', 'Logout from the Adaptive Cloud Platform')
   .parse(process.argv);
 
