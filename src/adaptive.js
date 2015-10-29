@@ -21,6 +21,7 @@ program
   .command('change-password', 'Change the password for the current user')
   .command('unregister', 'Remove all the account information for the user')
   .command('build', 'Build a project on the Adaptive Cloud Builder')
+  .command('status [id]', 'Check the status of the build')
   .command('logout', 'Logout from the Adaptive Cloud Platform')
   .parse(process.argv);
 

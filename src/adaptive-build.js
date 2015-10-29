@@ -11,9 +11,6 @@ var lib = require('./lib.js');
 
 var zipFileName = 'build.zip';
 
-// TODO: add an option --dist-command for executing custom dist commands
-// TODO: add option to skip the zip
-
 program
   .option('-s --skip-dist', 'Skip the grunt dist task.', undefined, undefined)
   .option('-p --dist-path [path]', 'Specify the dist folder. default: dist', undefined, undefined)
@@ -24,6 +21,7 @@ program
 // Options parsing
 // -------------------------------------------------------------------------------------------
 
+// Check for logged users
 if (!lib.getToken()) {
   console.error(('ERROR: you\'re not logged!').red);
   process.exit(1);
@@ -191,7 +189,7 @@ function apiCall() {
       console.error(('ERROR (' + response.statusCode + '): ' + response.statusMessage).red);
       process.exit(1);
     }).on('error', function (err, response) {
-      console.error(('ERROR (' + response.statusCode + '): ' + response.statusMessage).red);
+      console.error(('ERROR: ' + err.code).red);
       process.exit(1);
     }).on('success', function (data, response) {
 

@@ -20,6 +20,7 @@ exports.urlResetPasswordInit = '/api/account/reset_password/init';
 exports.urlResetPasswordFinish = '/api/account/reset_password/finish';
 exports.urlChangePassword = '/api/account/change_password';
 exports.urlUpload = '/api/buildRequests/upload';
+exports.urlStatus = '/api/buildRequests';
 
 /**
  * Method for calling a REST API with Node.js
