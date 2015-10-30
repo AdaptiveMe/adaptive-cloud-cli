@@ -4,6 +4,7 @@ var queryString = require('querystring');
 var https = require('https');
 var colors = require('colors');
 var path = require('path');
+var Table = require('cli-table');
 var extend = require('util')._extend;
 
 var host = 'app.adaptive.me';
@@ -19,8 +20,13 @@ exports.urlAccount = '/api/account';
 exports.urlResetPasswordInit = '/api/account/reset_password/init';
 exports.urlResetPasswordFinish = '/api/account/reset_password/finish';
 exports.urlChangePassword = '/api/account/change_password';
-exports.urlUpload = '/api/buildRequests/upload';
+exports.urlUpload = '/api/buildChains';
 exports.urlStatus = '/api/buildRequests';
+exports.urlLogs = '/log';
+
+// -------------------------------------------------------------------------- //
+// API CALLING
+// -------------------------------------------------------------------------- //
 
 /**
  * Method for calling a REST API with Node.js
@@ -82,6 +88,10 @@ function performRequest(endpoint, method, data, head, success) {
   });
 }
 exports.performRequest = performRequest;
+
+// -------------------------------------------------------------------------- //
+// TOKEN UTILITIES
+// -------------------------------------------------------------------------- //
 
 // Localstorage
 var localStorage;
@@ -182,3 +192,46 @@ function validateEmail(email) {
   return re.test(email);
 }
 exports.validateEmail = validateEmail;
+
+// -------------------------------------------------------------------------- //
+// TABLES
+// -------------------------------------------------------------------------- //
+
+function printTable(data) {
+
+  var table = new Table({
+    head: ['id'.blue, 'platform'.blue, 'start time'.blue, 'end time'.blue, 'status'.blue]
+  });
+
+  // Parse the buildRequests
+  var index;
+  for (index = 0; index < data.length; ++index) {
+    var id = data[index].id;
+    var platform = data[index].platform;
+    var status;
+    switch (data[index].status) {
+      case 'QUEUED':
+        status = (data[index].status).yellow;
+        break;
+      case 'RUNNING':
+        status = (data[index].status).blue;
+        break;
+      case 'SUCCESSFUL':
+        status = (data[index].status).green;
+        break;
+      case 'CANCELLED':
+        status = (data[index].status).red;
+        break;
+      case 'FAILED':
+        status = (data[index].status).red;
+        break;
+    }
+    var startTime = data[index].startTime === null ? '-' : data[index].startTime;
+    var endTime = data[index].endTime === null ? '-' : data[index].endTime;
+
+    table.push([id, platform, startTime, endTime, status]);
+  }
+
+  return table.toString();
+}
+exports.printTable = printTable;

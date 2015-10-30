@@ -38,14 +38,6 @@ rest.get(lib.host + lib.urlStatus + '/' + id, {
   console.error(('ERROR: ' + err.code).red);
   process.exit(1);
 }).on('success', function (data, response) {
-
-  var table = new Table({
-    head: ['id'.blue, 'platform'.blue, 'created date'.blue, 'status'.blue]
-  });
-
-  table.push([data.id, data.platform, data.createdDate,
-    data.status === 'CANCELLED' ? (data.status).red : (data.status).green]);
-
-  console.log(table.toString());
+  console.log(lib.printTable([data]));
   process.exit(0);
 });

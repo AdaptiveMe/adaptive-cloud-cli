@@ -15,7 +15,6 @@
   "disallowTrailingWhitespace": true,
   "maximumLineLength": 120,
   "requireCapitalizedConstructors": true,
-  "requireCurlyBraces": true,
   "requireSpaceAfterKeywords": [
     "if",
     "else",

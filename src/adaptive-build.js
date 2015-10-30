@@ -13,7 +13,7 @@ var zipFileName = 'build.zip';
 
 program
   .option('-s --skip-dist', 'Skip the grunt dist task.', undefined, undefined)
-  .option('-p --dist-path [path]', 'Specify the dist folder. default: dist', undefined, undefined)
+  .option('-p --dist-folder [path]', 'Specify the dist folder. default: dist', undefined, undefined)
   .option('-v --verbose', 'Prints more information on the build', undefined, undefined)
   .parse(process.argv);
 
@@ -28,15 +28,15 @@ if (!lib.getToken()) {
 }
 
 // Validate if the dist path is set
-if (program.distPath === true) {
+if (program.distFolder === true) {
   console.error('ERROR: You should specify a dist path'.red);
   process.exit(1);
 }
 
 // If the dist path is set, the skip dist maybe should be enabled
-if (program.distPath !== undefined && program.skipDist === undefined) {
+if (program.distFolder !== undefined && program.skipDist === undefined) {
   console.log('You have specified a dist path, but you do not skipped the default dist. It is that correct?'.yellow);
-} else if (program.distPath === undefined && program.skipDist !== undefined) {
+} else if (program.distFolder === undefined && program.skipDist !== undefined) {
   console.log('You are skipping the dist command but you do not specified a dist path. It is that correct?'.yellow);
 }
 
@@ -117,7 +117,7 @@ if (!program.skipDist) {
 function zipFolder() {
 
   // Determine the dist folder
-  var dist = program.distPath === undefined ? 'dist' : program.distPath;
+  var dist = program.distFolder === undefined ? 'dist' : program.distFolder;
 
   try {
     if (!fs.lstatSync(dist).isDirectory()) {
@@ -192,18 +192,7 @@ function apiCall() {
       console.error(('ERROR: ' + err.code).red);
       process.exit(1);
     }).on('success', function (data, response) {
-
-      var table = new Table({
-        head: ['id'.blue, 'platform'.blue, 'created date'.blue, 'status'.blue]
-      });
-
-      for (var i in data) {
-        var entry = data[i];
-        table.push([entry.id, entry.platform, entry.createdDate,
-          entry.status === 'QUEUED' ? (entry.status).green : (entry.status).red])
-      }
-
-      console.log(table.toString());
+      console.log(lib.printTable(data.requests));
       process.exit(0);
     });
   });
