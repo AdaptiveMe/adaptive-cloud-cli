@@ -19,29 +19,114 @@ Install this globally and you'll have access to the **adaptive** command anywher
 npm install -g adaptive-cloud-cli
 ```
 
-![Login](img/login.gif)
+## Usage
 
-## Commands
-
-``` 
-Usage: adaptive [options] [command]
-
-Commands:
-
-  login [username]        Login into the Adaptive Cloud Platform with your username
-  register [email]        Register user into the Adaptive Cloud Platform
-  reset-password [email]  Reset the password for the user
-  change-password         Change the password for the current user
-  unregister              Remove all the account information for the user
-  logout                  Logout from the Adaptive Cloud Platform
-  help [cmd]              display help for [cmd]
-
-Options:
-
-  -h, --help     output usage information
-  -V, --version  output the version number
+### Help & version
 
 ```
+adaptive -h
+adaptive -V
+```
+
+### Help for command
+
+```
+adaptive help <command>
+```
+
+### Account Management
+
+TODO: text
+TODO: Generate the gif again with another email
+
+
+#### Register 
+
+TODO: text
+
+```
+adaptive register <email>
+  ? Enter your username: <username>
+  ? Enter your password: <password>
+adaptive login <username>
+  ? Enter your password: <password>
+adaptive logout
+```
+  
+![Login](img/login.gif)
+
+#### Change password
+
+TODO: text
+
+```
+adaptive change-password
+  ? Enter your new password: <password>
+```
+
+#### Reset pasword
+
+TODO: text
+
+```
+adaptive reset-password <email>
+adaptive change-password
+  ? Enter your key: <key>
+  ? Enter your new password: <password>
+```
+
+#### Unregister
+
+TODO: text
+
+```
+adaptive unregister
+  ? This command will delete all data associated with your account, are you sure? 
+```
+
+### Building Projects
+
+TODO: text
+TODO: Generate the terminal gift
+
+#### Build
+
+TODO: text
+
+```
+adaptive build
+```
+
+##### Build options
+
+```
+    -h, --help               output usage information
+    -s --skip-dist           Skip the grunt dist task.
+    -p --dist-folder [path]  Specify the dist folder. default: dist
+    -v --verbose             Prints more information on the build
+```
+
+#### Status
+
+TODO: text
+
+```
+adaptive status <id>
+```
+
+#### Logs
+
+TODO: text
+
+```
+adaptive logs <id>
+```
+
+TODO: Generate the terminal gif
+
+#### Download
+
+TODO: implement the command
 
 ### About Adaptive Runtime Platform
 
