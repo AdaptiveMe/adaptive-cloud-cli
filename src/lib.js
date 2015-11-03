@@ -9,6 +9,7 @@ var extend = require('util')._extend;
 
 var host = 'app.adaptive.me';
 exports.host = 'https://' + host;
+exports.hostname = host;
 
 exports.clientId = 'AdaptiveCli';
 exports.clientSecret = 'muAwkBAcFdpL68kELcNMrFELqAkNFrZkbKQKFMnG';
