@@ -3,7 +3,6 @@
 var program = require('commander');
 var colors = require('colors');
 var rest = require('restler');
-var Table = require('cli-table');
 var lib = require('./lib.js');
 
 // Arguments parsing and validation

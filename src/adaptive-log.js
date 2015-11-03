@@ -2,8 +2,7 @@
 
 var program = require('commander');
 var colors = require('colors');
-var rest = require('restler');
-var https = require('https');
+var request = require('request');
 var lib = require('./lib.js');
 
 // Arguments parsing and validation
@@ -11,7 +10,7 @@ var lib = require('./lib.js');
 program.parse(process.argv);
 
 if (!program.args.length) {
-  console.error('\n  Usage: adaptive logs <id>\n'.red);
+  console.error('\n  Usage: adaptive log <id>\n'.red);
   process.exit(1);
 }
 
@@ -23,20 +22,15 @@ if (!lib.getToken()) {
   process.exit(1);
 }
 
-var url = lib.host + lib.urlStatus + '/' + id + lib.urlLogs;
-
 var options = {
-  hostname: lib.hostname,
-  port: 443,
-  path: lib.urlStatus + '/' + id + lib.urlLogs,
-  method: 'GET',
+  url: 'http://' + lib.hostname + lib.urlStatus + '/' + id + lib.urlLogs,
   headers: {
-    Authorization: 'Bearer ' + lib.getToken()
+    Authorization: 'Bearer ' + lib.getToken(),
+    Accept: 'text/plain'
   }
 };
-options.agent = new https.Agent(options);
 
-https.get(options, function (response) {
+request(options, function (error, response, body) {
 
   switch (response.statusCode) {
     case 401:
@@ -48,11 +42,7 @@ https.get(options, function (response) {
       process.exit(1);
       break;
   }
-
-  // Pipe the process to stdout
-  response.pipe(process.stdout);
-
 }).on('error', function (error) {
-  console.error(('ERROR: ' + err.code).red);
+  console.error(('ERROR: ' + error).red);
   process.exit(1);
-});
+}).pipe(process.stdout);

@@ -24,6 +24,7 @@ exports.urlChangePassword = '/api/account/change_password';
 exports.urlUpload = '/api/buildChains';
 exports.urlStatus = '/api/buildRequests';
 exports.urlLogs = '/log';
+exports.urlDownload = '/artifacts';
 
 // -------------------------------------------------------------------------- //
 // API CALLING

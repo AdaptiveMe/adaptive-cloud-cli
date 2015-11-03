@@ -6,7 +6,6 @@ var YAML = require('yamljs');
 var fs = require('fs');
 var archiver = require('archiver');
 var restler = require('restler');
-var Table = require('cli-table');
 var lib = require('./lib.js');
 
 var zipFileName = 'build.zip';
@@ -192,6 +191,9 @@ function apiCall() {
       console.error(('ERROR: ' + err.code).red);
       process.exit(1);
     }).on('success', function (data, response) {
+      // Deleting the zip
+      fs.unlinkSync(zipFileName);
+
       console.log(lib.printTable(data.requests));
       process.exit(0);
     });
