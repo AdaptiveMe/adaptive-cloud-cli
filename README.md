@@ -119,14 +119,20 @@ adaptive status <id>
 TODO: text
 
 ```
-adaptive logs <id>
+adaptive log <id>
 ```
 
 TODO: Generate the terminal gif
 
 #### Download
 
-TODO: implement the command
+TODO: text
+
+```
+adaptive download <id>
+```
+
+TODO: Generate the terminal gif
 
 ### About Adaptive Runtime Platform
 
