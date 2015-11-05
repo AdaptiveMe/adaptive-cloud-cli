@@ -95,8 +95,9 @@ if (!program.skipDist) {
     }
 
     if (error !== null || stderr) {
-      console.error(('ERROR: There is an error running the <grunt dist> command: ' + error).red);
-      console.error((stderr).red);
+      console.error(('ERROR: There is an error running the <grunt dist> command').red);
+      console.error(('Did you execute <npm install && bower install>?').yellow);
+      console.error((error).red);
       process.exit(1);
     }
 
