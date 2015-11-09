@@ -56,17 +56,22 @@ try {
   process.exit(1);
 }
 
-// Validate adaptive.yml contents
-if (!config.app.id) {
-  console.error('ERROR: The app id is not configured in the adaptive.yml'.red);
-  process.exit(1);
-}
-if (!(config.adaptive.android || config.adaptive.ios)) {
-  console.error('ERROR: There are no platforms configured in adaptive.yml for building'.red);
+try {
+  // Validate adaptive.yml contents
+  if (!config.appid) {
+    console.error('ERROR: The app id is not configured in the adaptive.yml'.red);
+    process.exit(1);
+  }
+  if (config.platforms.length < 0) {
+    console.error('ERROR: There are no platforms configured in adaptive.yml for building'.red);
+    process.exit(1);
+  }
+} catch (e) {
+  console.error(('ERROR: There is a problem parsing the adaptive.yml (' + e.message + ')').red);
   process.exit(1);
 }
 
-console.log(('Building project: ' + config.app.name + '@' + config.app.version).green);
+console.log(('Building project: ' + config.name + '@' + config.version).green);
 
 // -------------------------------------------------------------------------------------------
 // Distribution task
@@ -164,11 +169,13 @@ function apiCall() {
 
   console.log(' - Sending the zip to start the build...'.green);
 
+  // parse the yml to identify the platforms
   var platforms = '';
-  platforms += config.adaptive.android ? 'android,' : '';
-  platforms += config.adaptive.ios ? 'ios,' : '';
+  config.platforms.forEach(function (entry) {
+    platforms += entry.name + ',';
+  });
 
-  var url = lib.host + lib.urlUpload + '?appId=' + config.app.id + '&platforms=' + platforms.slice(0, -1);
+  var url = lib.host + lib.urlUpload + '?appId=' + config.appid + '&platforms=' + platforms.slice(0, -1);
 
   if (program.verbose) {
     console.log((' - Calling API: ' + url).green);
