@@ -6,7 +6,6 @@ var colors = require('colors');
 var lib = require('./lib.js');
 
 // Arguments parsing and validation
-
 program.parse(process.argv);
 
 if (!program.args.length) {
@@ -16,15 +15,9 @@ if (!program.args.length) {
 
 var email = program.args[0];
 
-// Check for alredy logged users
-
-if (lib.getToken()) {
-  console.error('WARN: You\'re already logged. Please logout'.yellow);
-  process.exit(1);
-}
+lib.isNotLoggedUser();
 
 // Prompt password to the user
-
 inquirer.prompt([{
   type: 'password',
   message: 'Enter your password:',
@@ -32,38 +25,18 @@ inquirer.prompt([{
   validate: lib.validatePassword
 }], function (answers) {
 
-  // REST calling
-  var auth = 'Basic ' + new Buffer(lib.clientId + ':' + lib.clientSecret).toString('base64');
-
-  lib.performRequest(lib.urlLogin, 'POST', {
+  lib.request(lib.api.login, {
     username: email,
     password: answers.password,
-    grant_type: 'password',
-    scope: 'read write',
-    client_secret: lib.clientSecret,
-    client_id: lib.clientId
-  }, {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    Accept: 'application/json',
-    Authorization: auth
-  }, function (data, statusCode, statusMessage) {
-
-    data = JSON.parse(data);
-
-    if (statusCode != 200) {
-      if (statusCode == 400) {
-        console.error('ERROR: Check your username/password'.red);
-        process.exit(1);
-      } else {
-        console.error(('ERROR (' + statusCode + '): ' + (statusMessage || data.error_description || data.error)).red);
-        process.exit(1);
-      }
-    } else {
-
-      lib.setToken(data.access_token);
+    grant_type: 'password'
+  }, function (data, code) {
+    if (code === 200) {
+      lib.setToken(JSON.parse(data).access_token);
       console.log('You\'ve successfully logged!'.green);
       process.exit(0);
+    } else {
+      console.error(('ERROR: ' + data).red);
+      process.exit(1);
     }
   });
 });
-

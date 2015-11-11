@@ -6,24 +6,16 @@ var lib = require('./lib.js');
 
 program.parse(process.argv);
 
-lib.performRequest(lib.urlLogout, 'POST', {}, {}, function (data, statusCode, statusMessage) {
+lib.isLoggedUser();
 
-  if (statusCode != 200) {
+lib.request(lib.api.logout, '', function (data, code) {
 
-    data = JSON.parse(data);
-    console.error(('ERROR (' + statusCode + '): ' + (statusMessage || data.error_description || data.error)).red);
-    process.exit(1);
-
+  if (code === 200) {
+    lib.removeToken();
+    console.log('Bye!'.green);
+    process.exit(0);
   } else {
-
-    // Remove the token
-    if (lib.getToken()) {
-      lib.removeToken();
-      console.log('Bye!'.green);
-      process.exit(0);
-    } else {
-      console.error(('ERROR: you\'re not logged!').red);
-      process.exit(1);
-    }
+    console.error(('ERROR: ' + data).red);
+    process.exit(1);
   }
 });

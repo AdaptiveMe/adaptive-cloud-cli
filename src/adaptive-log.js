@@ -2,47 +2,63 @@
 
 var program = require('commander');
 var colors = require('colors');
-var request = require('request');
+var req = require('request');
+var spinner = require('simple-spinner');
 var lib = require('./lib.js');
 
 // Arguments parsing and validation
-
 program.parse(process.argv);
-
 if (!program.args.length) {
   console.error('\n  Usage: adaptive log <id>\n'.red);
   process.exit(1);
 }
-
 var id = program.args[0];
+lib.isLoggedUser();
 
-// Check for logged users
-if (!lib.getToken()) {
-  console.error(('ERROR: you\'re not logged!').red);
-  process.exit(1);
-}
+// MARK: For the log we're not using the common api call because we need
+// to pipe the response to stdout
+lib.api.log.url = lib.api.log.url.replace('https', 'http'); // For piping the response we need http
+lib.api.log.url = lib.api.log.url.replace('{id}', id);
 
-var options = {
-  url: 'http://' + lib.hostname + lib.urlStatus + '/' + id + lib.urlLogs,
-  headers: {
-    Authorization: 'Bearer ' + lib.getToken(),
-    Accept: 'text/plain'
-  }
-};
+spinner.start(50, {hideCursor: true});
 
-request(options, function (error, response, body) {
+req(lib.api.log,
+  function (error, response, body) {
 
-  switch (response.statusCode) {
-    case 401:
-      console.error(('ERROR (' + response.statusCode + '): The authentication token is not valid').red);
-      process.exit(1);
-      break;
-    case 404:
-      console.error(('ERROR (' + response.statusCode + '): There is no build request for that id').red);
-      process.exit(1);
-      break;
-  }
-}).on('error', function (error) {
-  console.error(('ERROR: ' + error).red);
-  process.exit(1);
-}).pipe(process.stdout);
+    var code = response.statusCode;
+    switch (code) {
+      case 200:
+        break;
+      case 401:
+        console.error(('ERROR (' + code + '): The authentication token is not valid').red);
+        process.exit(1);
+        break;
+      case 404:
+        console.error(('ERROR (' + code + '): There is no build request for that id').red);
+        process.exit(1);
+        break;
+      default:
+        console.error(('ERROR (' + code + '): There is an error').red);
+        process.exit(1);
+
+    }
+  })
+
+  // Error generation the response+
+  .on('error', function (error) {
+    console.error((error + '').red);
+    process.exit(1);
+  })
+  
+  // When we receive the first chunk of the response
+
+  .on('response', function (response) {
+
+    spinner.stop();
+    // Move the cursor to the start to remove the spinner
+    process.stdout.cursorTo(0);
+
+  })
+
+  // Pipe the response to stdout
+  .pipe(process.stdout);

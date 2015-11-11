@@ -7,8 +7,21 @@ var lib = require('./lib.js');
 
 program.parse(process.argv);
 
+var callback = function (data, code) {
+  if (code === 200) {
+    console.log('You\'ve successfully changed your password!'.green);
+    process.exit(0);
+  } else if (code === 404) {
+    console.error('The provided key is invalid'.red);
+    process.exit(1);
+  } else {
+    console.error(('ERROR: ' + data).red);
+    process.exit(1);
+  }
+};
+
 // If the user is logged, he only wants to change the password
-// otherwise he's comming from the reset password
+// otherwise he's coming from the reset password
 
 if (lib.getToken()) {
 
@@ -19,22 +32,7 @@ if (lib.getToken()) {
     validate: lib.validatePassword
   }], function (answers) {
 
-    lib.performRequest(lib.urlChangePassword, 'POST', {
-      data: answers.password
-    }, {
-      'Content-Type': 'text/plain',
-      Accept: 'application/json, text/plain, */*',
-      Authorization: 'Bearer ' + lib.getToken()
-    }, function (data, statusCode, statusMessage) {
-
-      if (statusCode == 200) {
-        console.log('You\'ve successfully changed your password!'.green);
-        process.exit(0);
-      } else {
-        console.error(('ERROR (' + statusCode + '): ' + statusMessage).red);
-        process.exit(1);
-      }
-    });
+    lib.request(lib.api.change, answers.password, callback);
   });
 
 } else {
@@ -53,21 +51,9 @@ if (lib.getToken()) {
     validate: lib.validatePassword
   }], function (answers) {
 
-    lib.performRequest(lib.urlResetPasswordFinish, 'POST', {
+    lib.request(lib.api.reset_change, {
       key: answers.key,
       newPassword: answers.password
-    }, {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Accept: 'application/json, text/plain, */*'
-    }, function (data, statusCode, statusMessage) {
-
-      if (statusCode == 200) {
-        console.log('You\'ve successfully changed your password!'.green);
-        process.exit(0);
-      } else {
-        console.error(('ERROR (' + statusCode + '): ' + statusMessage).red);
-        process.exit(1);
-      }
-    });
+    }, callback);
   });
 }

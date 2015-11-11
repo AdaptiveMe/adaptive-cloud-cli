@@ -5,7 +5,6 @@ var colors = require('colors');
 var YAML = require('yamljs');
 var fs = require('fs');
 var archiver = require('archiver');
-var restler = require('restler');
 var lib = require('./lib.js');
 
 var zipFileName = 'build.zip';
@@ -20,11 +19,7 @@ program
 // Options parsing
 // -------------------------------------------------------------------------------------------
 
-// Check for logged users
-if (!lib.getToken()) {
-  console.error(('ERROR: you\'re not logged!').red);
-  process.exit(1);
-}
+lib.isLoggedUser();
 
 // Validate if the dist path is set
 if (program.distFolder === true) {
@@ -43,33 +38,7 @@ if (program.distFolder !== undefined && program.skipDist === undefined) {
 // Project validation
 // -------------------------------------------------------------------------------------------
 
-// Check if the current folder contains a adaptive project (looking for adaptive.yml)
-try {
-
-  var config = YAML.load('adaptive.yml');
-
-} catch (e) {
-  console.error(('ERROR: ' + e.message).red);
-  if (e.code === 'ENOENT') {
-    console.error('ERROR: The current folder is not an adaptive project folder.'.red);
-  }
-  process.exit(1);
-}
-
-try {
-  // Validate adaptive.yml contents
-  if (!config.appid) {
-    console.error('ERROR: The app id is not configured in the adaptive.yml'.red);
-    process.exit(1);
-  }
-  if (config.platforms.length < 0) {
-    console.error('ERROR: There are no platforms configured in adaptive.yml for building'.red);
-    process.exit(1);
-  }
-} catch (e) {
-  console.error(('ERROR: There is a problem parsing the adaptive.yml (' + e.message + ')').red);
-  process.exit(1);
-}
+var config = lib.isValidAdaptiveProject();
 
 console.log(('Building project: ' + config.name + '@' + config.version).green);
 
@@ -102,7 +71,7 @@ if (!program.skipDist) {
     if (error !== null || stderr) {
       console.error(('ERROR: There is an error running the <grunt dist> command').red);
       console.error(('Did you execute <npm install && bower install>?').yellow);
-      console.error((error).red);
+      //console.error((error).red);
       process.exit(1);
     }
 
@@ -175,36 +144,31 @@ function apiCall() {
     platforms += entry.name + ',';
   });
 
-  var url = lib.host + lib.urlUpload + '?appId=' + config.appid + '&platforms=' + platforms.slice(0, -1);
-
-  if (program.verbose) {
-    console.log((' - Calling API: ' + url).green);
-  }
-
   fs.stat(zipFileName, function (err, stats) {
-    restler.post(url, {
-      multipart: true,
-      headers: {
-        Authorization: 'Bearer ' + lib.getToken(),
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data'
-      },
-      data: {
-        file: restler.file(zipFileName, null, stats.size, null, 'application/zip')
-      }
-    }).on('fail', function (data, response) {
-      console.error(('ERROR (' + response.statusCode + '): ' + response.statusMessage).red);
-      process.exit(1);
-    }).on('error', function (err, response) {
-      console.error(('ERROR: ' + err.code).red);
-      process.exit(1);
-    }).on('success', function (data, response) {
-      // Deleting the zip
-      fs.unlinkSync(zipFileName);
 
-      console.log(lib.printTable(data.requests));
-      process.exit(0);
-    });
+    var url = lib.api.upload.url.replace('{appId}', config.appid);
+    url = url.replace('{platforms}', platforms.slice(0, -1));
+    lib.api.upload.url = url;
+
+    if (program.verbose) {
+      console.log((' - Calling API: ' + url).green);
+    }
+
+    lib.request(lib.api.upload, {
+        file: fs.createReadStream(zipFileName)
+      }, function (data, code) {
+        if (code === 201) {
+          // Deleting the zip
+          fs.unlinkSync(zipFileName);
+
+          console.log(lib.printTable(JSON.parse(data).requests));
+          process.exit(0);
+        } else {
+          console.error(('ERROR: ' + data).red);
+          process.exit(1);
+        }
+      }
+    );
   });
 }
 

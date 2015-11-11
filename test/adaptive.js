@@ -7,11 +7,11 @@ var colors = require('colors');
 
 describe('API definition', function () {
 
-  this.timeout(15000); // Increase the default timeout
+  this.timeout(20000); // Increase the default timeout
 
   it('Adaptive Cloud API Host', function (done) {
 
-    request.get(lib.host, function (err, res, body) {
+    request(lib.api.host, function (err, res, body) {
       expect(res.statusCode).to.equal(200);
       done();
     });
@@ -22,64 +22,88 @@ describe('API definition', function () {
     var username = 'user' + new Date().getTime();
     var email = 'email' + new Date().getTime() + '@email.com';
     var password = 'superPassword';
+    var newPassword = 'newSuperPassword';
 
+    // -------------------------------------------------------------------------- //
     // REGISTER
-    lib.performRequest(lib.urlRegister, 'POST', {
-      login: username,
-      email: email,
-      password: password,
-      langKey: 'en'
-    }, {
-      'Content-Type': 'application/json;charset=UTF-8',
-      Accept: 'application/json, text/plain, */*'
-    }, function (data, statusCode, statusMessage) {
+    // -------------------------------------------------------------------------- //
 
-      if (statusCode == 201) {
+    lib.request(lib.api.register, {
+      login: username, email: email, password: password, langKey: 'en'
+    }, function (data, code) {
+      if (code === 201) {
 
+        // ---------------------------------------------------------------------- //
         // LOGIN
+        // ---------------------------------------------------------------------- //
 
-        lib.performRequest(lib.urlLogin, 'POST', {
-          username: username,
-          password: password,
-          grant_type: 'password',
-          scope: 'read write',
-          client_secret: lib.clientSecret,
-          client_id: lib.clientId
-        }, {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Accept: 'application/json',
-          Authorization: 'Basic ' + new Buffer(lib.clientId + ':' + lib.clientSecret).toString('base64')
-        }, function (data, statusCode, statusMessage) {
-
-          if (statusCode == 200) {
+        lib.request(lib.api.login, {
+          username: username, password: password, grant_type: 'password'
+        }, function (data, code) {
+          if (code === 200) {
 
             lib.setToken(JSON.parse(data).access_token);
 
-            // UNREGISTER
+            // ------------------------------------------------------------------ //
+            // CHANGE PASSWORD
+            // ------------------------------------------------------------------ //
 
-            lib.performRequest(lib.urlAccount, 'DELETE', {}, {
-              Accept: 'application/json, text/plain, */*',
+            // We need to set the token in runtime on the tests
+            lib.api.change.headers = {
               Authorization: 'Bearer ' + lib.getToken()
-            }, function (data, statusCode, statusMessage) {
+            };
+            lib.request(lib.api.change, newPassword, function (data, code) {
+              if (code === 200) {
 
-              if (statusCode == 200) {
+                // -------------------------------------------------------------- //
+                // LOGOUT
+                // -------------------------------------------------------------- //
 
-                if (lib.getToken()) {
-                  lib.removeToken();
-                }
-                done();
-              } else {
-                throw new Error('ERROR (' + statusCode + '): Removing user' + statusMessage);
+                lib.request(lib.api.logout, '', function (data, code) {
+
+                  if (code === 200) {
+
+                    lib.removeToken();
+
+                    // ---------------------------------------------------------- //
+                    // LOGIN
+                    // ---------------------------------------------------------- //
+
+                    lib.request(lib.api.login, {
+                      username: username, password: newPassword, grant_type: 'password'
+                    }, function (data, code) {
+                      if (code === 200) {
+
+                        lib.setToken(JSON.parse(data).access_token);
+
+                        // ------------------------------------------------------ //
+                        // UNREGISTER
+                        // ------------------------------------------------------ //
+
+                        // We need to set the token in runtime on the tests
+                        lib.api.unregister.headers = {
+                          Authorization: 'Bearer ' + lib.getToken()
+                        };
+
+                        lib.request(lib.api.unregister, '', function (data, code) {
+                          if (code === 200) {
+                            lib.removeToken();
+                            done();
+                          }
+                        });
+                      }
+                    });
+
+                  }
+                });
               }
             });
-          } else {
-            throw new Error('ERROR (' + statusCode + '): Logging user' + statusMessage);
           }
         });
-      } else {
-        throw new Error('ERROR (' + statusCode + '): Registering user ' + statusMessage);
       }
     });
   });
+
+  // TODO: Implement a test for the init/build/status/log commands
 
 });

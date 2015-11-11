@@ -7,7 +7,9 @@ var lib = require('./lib.js');
 
 program.parse(process.argv);
 
-// Prompt password and username to the user
+lib.isLoggedUser();
+
+// Prompt a confirmation to the user
 
 inquirer.prompt([{
   type: 'confirm',
@@ -17,33 +19,16 @@ inquirer.prompt([{
 
   if (answers.delete) {
 
-    // Check if the user is logged
-    if (lib.getToken()) {
-
-      lib.performRequest(lib.urlAccount, 'DELETE', {}, {
-        Accept: 'application/json, text/plain, */*',
-        Authorization: 'Bearer ' + lib.getToken()
-      }, function (data, statusCode, statusMessage) {
-
-        if (statusCode != 200) {
-          data = JSON.parse(data);
-          var msg = (data.error_description || data.error || data.description);
-          console.error(('ERROR (' + statusCode + '): ' + msg).red);
-          process.exit(1);
-        } else {
-          if (lib.getToken()) {
-            lib.removeToken();
-          }
-          console.log('Successfully unregistered!'.green);
-          process.exit(0);
-        }
-      });
-
-    } else {
-      console.error(('ERROR: you\'re not logged!').red);
-      process.exit(1);
-    }
-
+    lib.request(lib.api.unregister, '', function (data, code) {
+      if (code === 200) {
+        lib.removeToken();
+        console.log('Successfully unregistered!'.green);
+        process.exit(0);
+      } else {
+        console.error(('ERROR: ' + data).red);
+        process.exit(1);
+      }
+    });
   }
 });
 

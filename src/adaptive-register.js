@@ -6,13 +6,14 @@ var colors = require('colors');
 var lib = require('./lib.js');
 
 // Arguments parsing and validation
-
 program.parse(process.argv);
 
 if (!program.args.length) {
   console.error('\n  Usage: adaptive register <email>\n'.red);
   process.exit(1);
 }
+
+lib.isNotLoggedUser();
 
 var email = program.args[0];
 if (!lib.validateEmail(email)) {
@@ -21,7 +22,6 @@ if (!lib.validateEmail(email)) {
 }
 
 // Prompt password and username to the user
-
 inquirer.prompt([{
   type: 'input',
   message: 'Enter your username:',
@@ -35,25 +35,17 @@ inquirer.prompt([{
   validate: lib.validatePassword
 }], function (answers) {
 
-  lib.performRequest(lib.urlRegister, 'POST', {
+  lib.request(lib.api.register, {
     login: answers.username,
     email: email,
     password: answers.password,
     langKey: 'en'
-  }, {
-    'Content-Type': 'application/json;charset=UTF-8',
-    Accept: 'application/json, text/plain, */*'
-  }, function (data, statusCode, statusMessage) {
-
-    if (statusCode == 400) {
-      data = JSON.parse(data);
-      console.error(('ERROR (' + statusCode + '): ' + (data)).red);
-      process.exit(1);
-    } else if (statusCode == 201) {
+  }, function (data, code) {
+    if (code === 201) {
       console.log('You\'ve successfully registered!'.green);
       process.exit(0);
     } else {
-      console.error(('ERROR (' + statusCode + '): ' + statusMessage).red);
+      console.error(('ERROR: ' + data).red);
       process.exit(1);
     }
   });

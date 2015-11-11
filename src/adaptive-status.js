@@ -2,7 +2,6 @@
 
 var program = require('commander');
 var colors = require('colors');
-var rest = require('restler');
 var lib = require('./lib.js');
 
 // Arguments parsing and validation
@@ -16,27 +15,17 @@ if (!program.args.length) {
 
 var id = program.args[0];
 
-// Check for logged users
-if (!lib.getToken()) {
-  console.error(('ERROR: you\'re not logged!').red);
-  process.exit(1);
-}
+lib.isLoggedUser();
 
-rest.get(lib.host + lib.urlStatus + '/' + id, {
-  headers: {
-    Authorization: 'Bearer ' + lib.getToken()
-  }
-}).on('fail', function (data, response) {
-  if (response.statusCode === 404) {
-    console.error(('ERROR (' + response.statusCode + '): There is no build request for that id').red);
+lib.api.status.url = lib.api.status.url.replace('{id}', id);
+lib.request(lib.api.status, '', function (data, code) {
+  if (code === 200) {
+    console.log(lib.printTable([JSON.parse(data)]));
+    process.exit(0);
+  } else if (code === 404) {
+    console.error(('ERROR (' + code + '): There is no build request for that id').red);
   } else {
-    console.error(('ERROR (' + response.statusCode + '): ' + response.statusMessage).red);
+    console.error(('ERROR: ' + data).red);
+    process.exit(1);
   }
-  process.exit(1);
-}).on('error', function (err, response) {
-  console.error(('ERROR: ' + err.code).red);
-  process.exit(1);
-}).on('success', function (data, response) {
-  console.log(lib.printTable([data]));
-  process.exit(0);
 });
