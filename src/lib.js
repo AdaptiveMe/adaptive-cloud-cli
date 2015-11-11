@@ -15,6 +15,45 @@ var clientId = 'AdaptiveCli';
 var clientSecret = 'muAwkBAcFdpL68kELcNMrFELqAkNFrZkbKQKFMnG';
 
 // -------------------------------------------------------------------------- //
+// TOKEN UTILITIES
+// -------------------------------------------------------------------------- //
+
+// Localstorage
+var localStorage;
+
+if (typeof localStorage === 'undefined' || localStorage === null) {
+  var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+  var localDir = path.join(homeDir, '.adaptive', '.cli');
+  var LocalStorage = require('node-localstorage').LocalStorage;
+  localStorage = new LocalStorage(localDir);
+}
+
+/**
+ * Method for retrieving the access token
+ */
+function getToken() {
+  return localStorage.getItem('access_token')
+}
+exports.getToken = getToken;
+
+/**
+ * Method for setting the access token
+ * @param token Token value to save
+ */
+function setToken(token) {
+  localStorage.setItem('access_token', token);
+}
+exports.setToken = setToken;
+
+/**
+ * Method for removing the token
+ */
+function removeToken() {
+  localStorage.removeItem('access_token');
+}
+exports.removeToken = removeToken;
+
+// -------------------------------------------------------------------------- //
 // API CONFIGURATION
 // -------------------------------------------------------------------------- //
 
@@ -172,45 +211,6 @@ var deleteFolderRecursive = function (folder_path) {
   }
 };
 exports.deleteFolderRecursive = deleteFolderRecursive;
-
-// -------------------------------------------------------------------------- //
-// TOKEN UTILITIES
-// -------------------------------------------------------------------------- //
-
-// Localstorage
-var localStorage;
-
-if (typeof localStorage === 'undefined' || localStorage === null) {
-  var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-  var localDir = path.join(homeDir, '.adaptive', '.cli');
-  var LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage(localDir);
-}
-
-/**
- * Method for retrieving the access token
- */
-function getToken() {
-  return localStorage.getItem('access_token')
-}
-exports.getToken = getToken;
-
-/**
- * Method for setting the access token
- * @param token Token value to save
- */
-function setToken(token) {
-  localStorage.setItem('access_token', token);
-}
-exports.setToken = setToken;
-
-/**
- * Method for removing the token
- */
-function removeToken() {
-  localStorage.removeItem('access_token');
-}
-exports.removeToken = removeToken;
 
 // -------------------------------------------------------------------------- //
 // VALIDATIONS

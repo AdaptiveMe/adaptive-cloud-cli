@@ -49,9 +49,8 @@ req(lib.api.log,
     console.error((error + '').red);
     process.exit(1);
   })
-  
-  // When we receive the first chunk of the response
 
+  // When we receive the first chunk of the response
   .on('response', function (response) {
 
     spinner.stop();
