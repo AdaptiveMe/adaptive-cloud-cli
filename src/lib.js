@@ -25,7 +25,22 @@ if (typeof localStorage === 'undefined' || localStorage === null) {
   var homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
   var localDir = path.join(homeDir, '.adaptive', '.cli');
   var LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage(localDir);
+  try {
+    localStorage = new LocalStorage(localDir);
+  } catch (e) {
+
+    // If there is a problem accessing the local storage, create the folder
+    try {
+      fs.mkdirSync(path.join(homeDir, '.adaptive'));
+      fs.mkdirSync(localDir);
+      localStorage = new LocalStorage(localDir);
+    } catch (e) {
+      if (e.code != 'EEXIST') {
+        console.error(('There is a problem creating the .adaptive folder.' +
+        'Please create a folder <.adaptive> in your home directory').red);
+      }
+    }
+  }
 }
 
 /**
